@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.Scripts.SceneManagement;
 using NueGames.NueDeck.Scripts.Data.Collection;
 using NueGames.NueDeck.Scripts.UI;
 using NueGames.NueDeck.Scripts.UI.Reward;
