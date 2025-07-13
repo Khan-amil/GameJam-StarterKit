@@ -75,7 +75,7 @@ namespace NueGames.NueDeck.Scripts.Utils
             else if (sceneId == GameManager.SceneData.combatSceneIndex)
                 OpenCombatScene();
             else
-                TransitionSceneManager.Instance.LoadScene(sceneId);
+                TransitionSceneManager.Instance.LoadSceneAdditive(sceneId);
             
             TooltipManager.Instance.HideTooltip();
         }

@@ -14,7 +14,7 @@ namespace NueGames.NueDeck.Scripts.Utils
             try
             {
                 if (!GameManager.Instance)
-                    TransitionSceneManager.Instance.LoadScene("NueCore");
+                    TransitionSceneManager.Instance.LoadSceneAdditive("NueCore");
                 Destroy(gameObject);
             }
             catch (Exception e)

@@ -79,7 +79,7 @@ namespace NueGames.NueDeck.Scripts.Managers
         #region Routines
         private IEnumerator ChangeSceneRoutine(int index)
         {
-            TransitionSceneManager.Instance.LoadScene(index);
+            TransitionSceneManager.Instance.LoadSceneAdditive(index);
             yield return StartCoroutine(Fade(false));
         }
         
