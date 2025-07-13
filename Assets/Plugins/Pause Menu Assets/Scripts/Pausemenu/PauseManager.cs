@@ -281,7 +281,7 @@ namespace GreatArcStudios
         /// </summary>
         public void Start()
         {
-           
+            mainCam = Camera.main;
             readUseSimpleTerrain = useSimpleTerrain;
             if (useSimpleTerrain)
             {
@@ -940,7 +940,8 @@ namespace GreatArcStudios
             {
                 Debug.Log(" Finding main camera now...it is still suggested that you manually assign this");
                 mainCam = Camera.main;
-                mainCam.farClipPlane = f;
+                if (mainCam)
+                    mainCam.farClipPlane = f;
 
             }
 
@@ -1006,7 +1007,8 @@ namespace GreatArcStudios
         /// <param name="fov"></param>
         public void updateFOV(float fov)
         {
-            mainCam.fieldOfView = fov;
+            if (mainCam)
+                mainCam.fieldOfView = fov;
         }
         /// <summary>
         /// Toggle on or off Depth of Field. This is meant to be used with a checkbox.
