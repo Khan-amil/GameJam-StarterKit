@@ -19,7 +19,7 @@ Here’s an overview of the main project structure:
 ## StarterKit Plugins
 
 The following plugins are included in the StarterKit, feel free to use them if you find them useful:
-- [Pool system](Assets/Core/StarterKit Plugins/Pooling/Readme.md): Generic and straightforward pooling system.
+- [Pool system](Assets/Core/StarterKit%20Plugins/Pooling/Readme.md): Generic and straightforward pooling system.
 - [Scene Management](Assets/Core/StarterKit Plugins/Scene Management/Readme.md): A manager to help having clean scene transitions.
 - [GameStateManager](Assets/Core/StarterKit Plugins/GameStateManager/Readme.md): A set of extandable ScriptableObjects to manage game states and transitions.
 
@@ -30,12 +30,12 @@ They are all setup in the `Core` scene loaded by default, but they're designed t
 ## External projects and packages included
 
 Some projects and packages are included through openUpm:
-- [PlayerPrefs Editor] (https://github.com/Dysman/bgTools-playerPrefsEditor) (GPL3.0): A tool to easily edit PlayerPrefs in the Unity Editor.
-- [NaughtyAttributes] (https://github.com/dbrizov/NaughtyAttributes) (MIT): A collection of attributes to enhance the Unity Inspector.
-- [In game Debug Console] (https://github.com/yasirkula/UnityIngameDebugConsole) (MIT): A console for debugging in-game, useful for logging and testing.
+- [PlayerPrefs Editor](https://github.com/Dysman/bgTools-playerPrefsEditor) (GPL3.0): A tool to easily edit PlayerPrefs in the Unity Editor.
+- [NaughtyAttributes](https://github.com/dbrizov/NaughtyAttributes) (MIT): A collection of attributes to enhance the Unity Inspector.
+- [In game Debug Console](https://github.com/yasirkula/UnityIngameDebugConsole) (MIT): A console for debugging in-game, useful for logging and testing.
 - Cinemachine
 - TextMeshPro
-- Dotween
+- [Dotween](https://dotween.demigiant.com/download.php): A fast and efficient tweening engine for Unity, useful for animations and transitions.
 
 ---
 
