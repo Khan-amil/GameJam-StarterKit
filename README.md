@@ -20,7 +20,7 @@ Here’s an overview of the main project structure:
 
 The following plugins are included in the StarterKit, feel free to use them if you find them useful:
 - [Pool system](Assets/Core/StarterKit%20Plugins/Pooling/Readme.md): Generic and straightforward pooling system.
-- [Scene Management](Assets/Core/StarterKit%20Plugins/Scene Management/Readme.md): A manager to help having clean scene transitions.
+- [Scene Management](Assets/Core/StarterKit%20Plugins/Scene%20Management/Readme.md): A manager to help having clean scene transitions.
 - [GameStateManager](Assets/Core/StarterKit%20Plugins/GameStateManager/Readme.md): A set of extandable ScriptableObjects to manage game states and transitions.
 
 They are all setup in the `Core` scene loaded by default, but they're designed to not have any impact by default.
