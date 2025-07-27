@@ -1,64 +1,125 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening;
+using Core.Scripts.StateManagement;
+using UnityEngine.UI;
 
 namespace Core.StarterKit_Plugins.UIManager
 {
     public class Menu : MonoBehaviour
     {
-        private Stack<UIPanel> _pageStack = new Stack<UIPanel>();
+        [SerializeField] private List<UIPanel> _panels;
         
-        public void OpenPage(UIPanel page)
-        {
-            page.ShowPage();
-            
-            // Reset the stack to only contain the current page
-            _pageStack.Clear();
-            _pageStack.Push(page);
-        }
+        private int _currentIndex = 0;
         
-        public void NextPage(UIPanel page, bool chainEffects = true)
+        private bool _isOpen = false;
+
+        [SerializeField] private Button _openButton;
+        [SerializeField] private Button _nextButton;
+        [SerializeField] private Button _previousButton;
+        [SerializeField] private Button _closeButton;
+
+        [SerializeField] private GameState _gameStateWhenOpen;
+        private GameState _previousGameState;
+        
+        
+        private void Awake()
         {
-            Sequence sequence = DOTween.Sequence();
-            
-            if (_pageStack.Count > 0)
+            Close();
+
+            foreach (var panel in _panels)
             {
-                var current = _pageStack.Peek();
-                sequence.Append(current.HidePage());
-            }
-            if (chainEffects)
-            {
-                sequence.OnComplete(() => page.ShowPage().Play());
-            }
-            else
-            {
-                sequence.Join(page.ShowPage());
+                panel.gameObject.SetActive(false);
             }
             
-            _pageStack.Push(page);
+            if (_openButton)
+            {
+                _openButton.onClick.AddListener(Open);
+            }
+            if (_nextButton)
+            {
+                _nextButton.onClick.AddListener(NextPage);
+            }
+
+            if (_previousButton)
+            {
+                _previousButton.onClick.AddListener(PreviousPage);
+            }
+                
+            if (_closeButton)
+            {
+                _closeButton.onClick.AddListener(Close);
+            }
+            
+            // Disable control buttons initially
+            if (_nextButton) _nextButton.gameObject.SetActive(false);
+            if (_previousButton) _previousButton.gameObject.SetActive(false);
+            if (_closeButton) _closeButton.gameObject.SetActive(false);
         }
 
-        public void Back()
+        public void Open()
         {
-            if (_pageStack.Count <= 1) 
+            if (_isOpen) 
                 return;
 
-            var current = _pageStack.Pop();
-            current.HidePage();
+            if (_gameStateWhenOpen)
+            {
+                _previousGameState = GameStateManager.Instance.CurrentState;
+                GameStateManager.Instance.SetStateAsync(_gameStateWhenOpen);
+            }
+            
+            // Enable control buttons
+            if (_nextButton) _nextButton.gameObject.SetActive(true);
+            if (_previousButton) _previousButton.gameObject.SetActive(true);
+            if (_closeButton) _closeButton.gameObject.SetActive(true);
+            
+            UIManager.Instance.OpenMenu(_panels[0]);
+            _currentIndex = 0;
+            _isOpen = true;
+        }
+        
+        public void NextPage()
+        {
+            _currentIndex++;
 
-            var previous = _pageStack.Peek();
-            previous.ShowPage();
+            if (_currentIndex > _panels.Count - 1)
+            {
+                _currentIndex = 0; // Loop back to the first panel
+            }
+
+            UIManager.Instance.StackPage(_panels[_currentIndex]);
+        }
+
+        public void PreviousPage()
+        {
+            _currentIndex--;
+            if (_currentIndex < 0)
+            {
+                _currentIndex = _panels.Count - 1; // Loop back to the last panel
+            }
+
+            UIManager.Instance.StackPage(_panels[_currentIndex]);
         }
 
         public void Close()
         {
-            if (_pageStack.Count < 1) 
+            if (!_isOpen) 
                 return;
 
-            var current = _pageStack.Pop();
-            current.HidePage();
-
-            _pageStack.Clear();
+            if (_previousGameState)
+            {
+                GameStateManager.Instance.SetStateAsync(_previousGameState);
+                _previousGameState = null;
+            }
+            
+            // Disable control buttons
+            if (_nextButton) _nextButton.gameObject.SetActive(false);
+            if (_previousButton) _previousButton.gameObject.SetActive(false);
+            if (_closeButton) _closeButton.gameObject.SetActive(false);
+            
+            UIManager.Instance.Close();
+            _isOpen = false;
+            _currentIndex = 0; // Reset index when closing
         }
     }
 }

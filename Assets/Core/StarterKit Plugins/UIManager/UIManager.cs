@@ -1,87 +1,69 @@
 using System.Collections.Generic;
+using Core.Scripts.Utils;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Core.StarterKit_Plugins.UIManager
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : Singleton<UIManager>
     {
-        public Button openButton;
-        public Button nextButton;
-        public Button previousButton;
-        public Button closeButton;
+        private Stack<UIPanel> _pageStack = new Stack<UIPanel>();
         
-        public Menu uiBlock;
-        
-        public List<UIPanel> uiPanels;
-        
-        public bool chainEffects = true;
-        
-        int _currentPanelIndex = 0;
-        
-        private void Start()
+        public void OpenMenu(UIPanel page)
         {
-            if (openButton != null)
+            page.ShowPage();
+            
+            // Reset the stack to only contain the current page
+            _pageStack.Clear();
+            _pageStack.Push(page);
+        }
+        
+        public void StackPage(UIPanel page, bool chainEffects = true)
+        {
+            Sequence sequence = DOTween.Sequence();
+            
+            if (_pageStack.Count > 0)
             {
-                openButton.onClick.AddListener(OnOpenButtonClick);
+                var current = _pageStack.Peek();
+                sequence.Append(current.HidePage());
             }
-            if (nextButton != null)
+            if (chainEffects)
             {
-                nextButton.onClick.AddListener(OnNextButtonClick);
+                sequence.OnComplete(() => page.ShowPage().Play());
             }
-
-            if (previousButton != null)
+            else
             {
-                previousButton.onClick.AddListener(OnPreviousButtonClick);
+                sequence.Join(page.ShowPage());
             }
             
-            if (closeButton != null)
-            {
-                closeButton.onClick.AddListener(OnCloseButtonClick);
-            }
-
-            foreach (var uiPanel in uiPanels)
-            {
-                uiPanel.HidePage();
-            }
+            _pageStack.Push(page);
         }
 
-        private void OnNextButtonClick()
+        public void Back()
         {
-            if (uiPanels.Count == 0) return;
-
-            _currentPanelIndex++;
-            if (_currentPanelIndex >= uiPanels.Count)
+            if (_pageStack.Count == 1)
             {
-                _currentPanelIndex = 0; // Loop back to the first panel
+                Close();
+                return;
             }
 
-            var nextPanel = uiPanels[_currentPanelIndex];
-            uiBlock.NextPage(nextPanel, chainEffects);
-        }
-        
-        private void OnPreviousButtonClick()
-        {
-            if (uiPanels.Count == 0) return;
+            var current = _pageStack.Pop();
+            current.HidePage();
 
-            _currentPanelIndex--;
-            if (_currentPanelIndex < 0)
-            {
-                _currentPanelIndex = uiPanels.Count - 1; // Loop back to the last panel
-            }
-
-            var previousPanel = uiPanels[_currentPanelIndex];
-            uiBlock.NextPage(previousPanel, chainEffects);
-        }
-        
-        private void OnCloseButtonClick()
-        {
-            uiBlock.Close();
+            var previous = _pageStack.Peek();
+            previous.ShowPage();
         }
 
-        private void OnOpenButtonClick()
+        public void Close()
         {
-            uiBlock.OpenPage(uiPanels[_currentPanelIndex]);
+            if (_pageStack.Count < 1) 
+                return;
+
+            var current = _pageStack.Pop();
+            current.HidePage();
+
+            _pageStack.Clear();
         }
     }
 }

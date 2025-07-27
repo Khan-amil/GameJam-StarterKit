@@ -12,10 +12,21 @@ namespace Core.StarterKit_Plugins.UIManager
         
         [SerializeField] 
         private IUIToggleEffect[] _toggleEffects = Array.Empty<IUIToggleEffect>();
+
+        public void Open(bool stackPage)
+        {
+            if (stackPage)
+            {
+                UIManager.Instance.StackPage(this);
+            }
+            else
+            {
+                UIManager.Instance.OpenMenu(this);
+            }
+        }
         
         public virtual Tween ShowPage()
         {
-            gameObject.SetActive(true);
             Sequence seq = DOTween.Sequence();
             Sequence pageEffect = DOTween.Sequence();
             foreach (var uiToggleEffect in _toggleEffects)
@@ -31,6 +42,7 @@ namespace Core.StarterKit_Plugins.UIManager
             
             seq.Append(pageEffect);
             seq.Append(blocks);
+            seq.OnStart(()=> gameObject.SetActive(true));
             
             return seq.SetEase(ease);
         }
